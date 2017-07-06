@@ -38,6 +38,7 @@ describe('Groopr', () => {
       json: true,
       url: '/groop'
     };
+
     let response = null;
 
     it('Accepts an options hash containing the collection to be grouped', done => {
