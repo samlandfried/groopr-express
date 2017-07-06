@@ -5,13 +5,13 @@ const app = require('../server');
 describe('Groopr', () => {
   before(done => {
     this.port = 9876;
+    this.request = request.defaults({
+      baseUrl: 'http://localhost:9876/'
+    })
     this.server = app.listen(this.port, (error, result) => {
       if (error) { done(error); }
       done();
     });
-    this.request = request.defaults({
-      baseUrl: 'http://localhost:9876/'
-    })
   });
 
   after(() => {
