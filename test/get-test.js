@@ -5,7 +5,6 @@ const app = require('../server');
 describe('GET /groop', done => {
   before(done => {
     this.port = 9876;
-    console.log(this);
     this.server = app.listen(this.port, (error, result) => {
       if (error) { done(error); }
       done();
