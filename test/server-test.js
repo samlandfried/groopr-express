@@ -26,5 +26,12 @@ describe('Groopr', () => {
     it('Is named Groopr', () => {
       assert.equal('Groopr', app.locals.title);
     });
+
+    it('Has a root path', done => {
+      this.request('/', (request, response, body) => {
+        assert.include(body, 'Hello, world!');
+        done();
+      });
+    });
   });
 });
