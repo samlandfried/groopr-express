@@ -59,7 +59,17 @@ describe('Grouping', done => {
     });
 
     it('#makeGroups', () => {
-      const response = grouper.makeGroups();
+      const groups = grouper.makeGroups();
+
+      assert.isArray(groups);
+      groups.forEach(group => {
+        assert.isArray(group);
+        assert.isAbove(group.length, 1);
+      });
+    });
+
+    it('#group', () => {
+      const response = grouper.group();
       const groups = response.groups;
       const history = response.history;
 
@@ -85,7 +95,7 @@ describe('Grouping', done => {
   describe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
-    const response = grouper.makeGroups();
+    const response = grouper.group();
     const groups = response.groups;
     const history = response.history;
 
@@ -117,7 +127,7 @@ describe('Grouping', done => {
     });
 
     it("Returns a random configuration each time it's called", () => {
-      const groups2 = grouper.makeGroups();
+      const groups2 = grouper.group();
 
       assert.notDeepEqual(groups, groups2); // This test will fail 1 / 9! times
     });

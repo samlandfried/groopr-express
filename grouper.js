@@ -9,12 +9,19 @@ class Grouper {
     this.collection = options.collection;
   }
 
+  group() {
+    return {
+      groups: this.makeGroups(),
+      history: {}
+    };
+  }
+
   makeGroups() {
     const shuffled = Grouper.randomize(this.collection);
     const paired = Grouper.populateGroups(shuffled);
     const oddMemberGrouped = Grouper.makeBiggerGroupsWithOddMembers(paired);
 
-    return { groups: oddMemberGrouped, history: {} };
+    return oddMemberGrouped;
   }
 
 
@@ -39,7 +46,7 @@ class Grouper {
 
     while (oddMembers.length > 0) {
       groups[i].push(oddMembers.shift());
-      i < (groups.length - 1) ? i ++ : i = 0;
+      i < (groups.length - 1) ? i++ : i = 0;
     }
 
     return groups;
@@ -60,7 +67,7 @@ class Grouper {
       }
 
       return memo;
-    }, {groups: [], oddMembers: []});
+    }, { groups: [], oddMembers: [] });
   }
 
   static randomize(arr) {
