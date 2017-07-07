@@ -26,13 +26,22 @@ describe('Grouping', done => {
       assert.deepEqual(randomized.sort(), input);
     });
 
-    it('#pair', () => {
-      const paired = grouper.pair();
+    it('#populateGroups(defaults to 2)', () => {
+      const paired = grouper.populateGroups();
 
       assert.notEqual(paired, input);
       assert.equal(paired.length, 5);
       assert.deepEqual(paired[0], [1, 2]);
       assert.deepEqual(paired[4], [9]);
+    });
+
+    it('#populateGroups(3)', () => {
+      const paired = grouper.populateGroups(3);
+
+      assert.notEqual(paired, input);
+      assert.equal(paired.length, 3);
+      assert.deepEqual(paired[0], [1, 2, 3]);
+      assert.deepEqual(paired[2], [7, 8, 9]);
     });
 
     it('#findOddMembers', () => {
