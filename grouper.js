@@ -11,23 +11,23 @@ class Grouper {
 
   makeGroups() {
     const shuffled = Grouper.randomize(this.collection);
-    const paired = Grouper.pair(shuffled);
+    const paired = Grouper.populateGroups(shuffled);
     const oddMemberGrouped = Grouper.oddMembersMakeGroupsBigger(paired);
 
     return { groups: oddMemberGrouped, history: {} };
   }
 
 
-  static pair(arr) {
-    // return arr.reduce((memo, ele) => {
-    //   let last = memo.length - 1;
-    //   if (!memo[last] || memo[last].length === 2) {
-    //     memo.push(new Array());
-    //     last++;
-    //   }
-    //   memo[last].push(ele);
-    //   return memo;
-    // }, []);
+  static populateGroups(arr, size = 2) {
+    return arr.reduce((memo, ele) => {
+      let last = memo.length - 1;
+      if (!memo[last] || memo[last].length === 2) {
+        memo.push(new Array());
+        last++;
+      }
+      memo[last].push(ele);
+      return memo;
+    }, []);
   }
 
   static oddMembersMakeGroupsBigger(arr) {

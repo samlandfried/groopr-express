@@ -16,7 +16,7 @@ describe('Grouping', done => {
       assert.deepEqual(randomized.sort(), input);
     });
 
-    xit('#populateGroups(defaults to 2)', () => {
+    it('#populateGroups(defaults to 2)', () => {
       const paired = Grouper.populateGroups(input);
 
       assert.notEqual(paired, input);
