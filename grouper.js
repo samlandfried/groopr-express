@@ -10,9 +10,10 @@ class Grouper {
   }
 
   group() {
+    const groups = this.makeGroups();
     return {
-      groups: this.makeGroups(),
-      history: {}
+      groups: groups,
+      history: Grouper.makeHistory(groups)
     };
   }
 
@@ -22,6 +23,22 @@ class Grouper {
     const oddMemberGrouped = Grouper.makeBiggerGroupsWithOddMembers(paired);
 
     return oddMemberGrouped;
+  }
+
+  static makeHistory(groups) {
+    return groups.reduce((history, group) => {
+      group.forEach((outerMember, outerI) => {
+        history[outerMember] = new Object();
+        group.forEach((innerMember, innerI) => {
+          if (outerI !== innerI) {
+            if (!history[outerMember][innerMember])
+              history[outerMember][innerMember] = 0;
+            history[outerMember][innerMember]++;
+          }
+        });
+      });
+      return history;
+    }, new Object());
   }
 
 

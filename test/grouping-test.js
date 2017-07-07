@@ -68,6 +68,30 @@ describe('Grouping', done => {
       });
     });
 
+    it('#makeHistory(with no previous history)', () => {
+      const groups = grouper.makeGroups();
+      const member1 = groups[0][0];
+      const member2 = groups[0][1];
+      const member3 = groups[0][2];
+
+      const hist = Grouper.makeHistory(groups);
+      const hist1 = hist[member1];
+      const hist2 = hist[member2];
+      const hist3 = hist[member3];
+
+      assert.isObject(hist);
+
+      assert.isUndefined(hist1[member1]);
+      assert.equal(hist1[member2], 1);
+      assert.equal(hist1[member3], 1);
+      assert.equal(hist2[member1], 1);
+      assert.isUndefined(hist2[member2]);
+      assert.equal(hist2[member3], 1);
+      assert.equal(hist3[member1], 1);
+      assert.equal(hist3[member2], 1);
+      assert.isUndefined(hist3[member3]);
+    });
+
     it('#group', () => {
       const response = grouper.group();
       const groups = response.groups;
@@ -120,7 +144,6 @@ describe('Grouping', done => {
         memo[group.length] = memo[group.length] + 1 || 1;
         return memo;
       }, {});
-      console.log(groupLengthFrequencies)
 
       assert.equal(groupLengthFrequencies['2'], 3);
       assert.equal(groupLengthFrequencies['3'], 1);
