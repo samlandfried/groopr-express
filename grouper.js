@@ -1,4 +1,3 @@
-const pry = require('pryjs')
 class Grouper {
   constructor(options) {
     if (typeof options !== 'object') {

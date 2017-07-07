@@ -2,6 +2,7 @@ const assert = require('chai').assert;
 const expect = require('chai').expect;
 const request = require('request');
 const Grouper = require('../grouper');
+const pry = require('pryjs')
 
 describe('Grouping', done => {
   describe('Unit tests', () => {
@@ -57,7 +58,7 @@ describe('Grouping', done => {
       assert.include(reassigned[0], 9);
     });
 
-    xit('#makeGroups', () => {
+    it('#makeGroups', () => {
       const response = grouper.makeGroups();
       const groups = response.groups;
       const history = response.history;
@@ -68,7 +69,7 @@ describe('Grouping', done => {
     });
   });
 
-  xdescribe('Initialization', () => {
+  describe('Initialization', () => {
     it('Requires an options object', () => {
       const good = new Grouper({ collection: [] });
 
@@ -81,7 +82,7 @@ describe('Grouping', done => {
     });
   });
 
-  xdescribe('Default behavior (No options hash provided)', () => {
+  describe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
     const response = grouper.makeGroups();
@@ -98,8 +99,7 @@ describe('Grouping', done => {
 
     it('Returns all the original elements grouped', () => {
       const groupedEles = groups.reduce((memo, group) => {
-        memo.concat(group);
-        return memo;
+        return memo.concat(group);
       }, []);
 
       assert.deepEqual(groupedEles.sort(), input);
@@ -109,10 +109,11 @@ describe('Grouping', done => {
       const groupLengthFrequencies = groups.reduce((memo, group) => {
         memo[group.length] = memo[group.length] + 1 || 1;
         return memo;
-      });
+      }, {});
+      console.log(groupLengthFrequencies)
 
-      assert.equal(group['2'], 4);
-      assert.equal(group['3'], 1);
+      assert.equal(groupLengthFrequencies['2'], 3);
+      assert.equal(groupLengthFrequencies['3'], 1);
     });
 
     it("Returns a random configuration each time it's called", () => {
