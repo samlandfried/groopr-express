@@ -10,36 +10,41 @@ class Grouper {
   }
 
   makeGroups() {
-    const shuffled = this.randomize(this.collection);
-    const paired = this.pair(shuffled);
-    const oddMemberGrouped = this.oddMembersMakeGroupsBigger(paired);
+    const shuffled = Grouper.randomize(this.collection);
+    const paired = Grouper.pair(shuffled);
+    const oddMemberGrouped = Grouper.oddMembersMakeGroupsBigger(paired);
 
     return { groups: oddMemberGrouped, history: {} };
   }
 
-  randomize(arr) {
-    return arr.sort((a, b) => 0.5 - Math.random());
+
+  static pair(arr) {
+    // return arr.reduce((memo, ele) => {
+    //   let last = memo.length - 1;
+    //   if (!memo[last] || memo[last].length === 2) {
+    //     memo.push(new Array());
+    //     last++;
+    //   }
+    //   memo[last].push(ele);
+    //   return memo;
+    // }, []);
   }
 
-  pair(arr) {
-    return arr.reduce((memo, ele) => {
-      let last = memo.length - 1;
-      if (!memo[last] || memo[last].length === 2 ) {
-        memo.push(new Array());
-        last ++;
-      }
-      memo[last].push(ele);
-      return memo;
-    }, []);
-  }
-
-  oddMembersMakeGroupsBigger(arr) {
+  static oddMembersMakeGroupsBigger(arr) {
     const groupsAndStragglers = this.findOddMembers(arr);
   }
 
-  findOddMembers() {
+  static findOddMembers() {
 
+  }
+
+  static randomize(arr) {
+    return arr.slice().sort(() => .5 - Math.random());
   }
 }
 
 module.exports = Grouper;
+
+Array.prototype.randomize = function(arr) {
+  return arr.sort((a, b) => 0.5 - Math.random());
+}

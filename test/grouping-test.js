@@ -8,26 +8,16 @@ describe('Grouping', done => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
 
-    it('#makeGroups', () => {
-      const response = grouper.makeGroups();
-      const groups = response.groups;
-      const history = response.history;
-
-      assert.isObject(response);
-      assert.isObject(history);
-      assert.isArray(groups);
-    });
-
     it('#randomize', () => {
-      const randomized = grouper.randomize();
+      const randomized = Grouper.randomize(input);
 
       assert.notEqual(randomized, input);
       assert.notDeepEqual(randomized, input);
       assert.deepEqual(randomized.sort(), input);
     });
 
-    it('#populateGroups(defaults to 2)', () => {
-      const paired = grouper.populateGroups();
+    xit('#populateGroups(defaults to 2)', () => {
+      const paired = Grouper.populateGroups(input);
 
       assert.notEqual(paired, input);
       assert.equal(paired.length, 5);
@@ -35,8 +25,8 @@ describe('Grouping', done => {
       assert.deepEqual(paired[4], [9]);
     });
 
-    it('#populateGroups(3)', () => {
-      const paired = grouper.populateGroups(3);
+    xit('#populateGroups(input, 3)', () => {
+      const paired = Grouper.populateGroups(input, 3);
 
       assert.notEqual(paired, input);
       assert.equal(paired.length, 3);
@@ -44,8 +34,8 @@ describe('Grouping', done => {
       assert.deepEqual(paired[2], [7, 8, 9]);
     });
 
-    it('#findOddMembers', () => {
-      const split = grouper.findOddMembers();
+    xit('#findOddMembers', () => {
+      const split = Grouper.findOddMembers(input);
       const groups = split.groups;
       const oddMembers = split.oddMembers;
 
@@ -56,17 +46,27 @@ describe('Grouping', done => {
       assert.equal(groups.length, 4);
     })
 
-    it('#assignOddMembersToGroups', () => {
-      const reassigned = grouper.assignOddMembersToGroups();
+    xit('#assignOddMembersToGroups', () => {
+      const reassigned = Grouper.assignOddMembersToGroups(input);
 
       assert.isArray(reassigned);
       assert.equal(reassigned.length, 7);
       assert.equal(reassigned[0].length, 3);
       assert.include(reassigned[0], 9);
     });
+
+    xit('#makeGroups', () => {
+      const response = grouper.makeGroups();
+      const groups = response.groups;
+      const history = response.history;
+
+      assert.isObject(response);
+      assert.isObject(history);
+      assert.isArray(groups);
+    });
   });
 
-  describe('Initialization', () => {
+  xdescribe('Initialization', () => {
     it('Requires an options object', () => {
       const good = new Grouper({ collection: [] });
 
@@ -79,7 +79,7 @@ describe('Grouping', done => {
     });
   });
 
-  describe('Default behavior (No options hash provided)', () => {
+  xdescribe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
     const response = grouper.makeGroups();
