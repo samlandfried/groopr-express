@@ -1,3 +1,4 @@
+const pry = require('pryjs')
 class Grouper {
   constructor(options) {
     if (typeof options !== 'object') {
@@ -12,7 +13,7 @@ class Grouper {
   makeGroups() {
     const shuffled = Grouper.randomize(this.collection);
     const paired = Grouper.populateGroups(shuffled);
-    const oddMemberGrouped = Grouper.oddMembersMakeGroupsBigger(paired);
+    const oddMemberGrouped = Grouper.makeBiggerGroupsWithOddMembers(paired);
 
     return { groups: oddMemberGrouped, history: {} };
   }
@@ -30,8 +31,19 @@ class Grouper {
     }, []);
   }
 
-  static oddMembersMakeGroupsBigger(arr) {
+  static makeBiggerGroupsWithOddMembers(arr) {
     const groupsAndStragglers = this.findOddMembers(arr);
+    const oddMembers = groupsAndStragglers.oddMembers;
+    const groups = groupsAndStragglers.groups;
+
+    let i = 0;
+
+    while (oddMembers.length > 0) {
+      groups[i].push(oddMembers.shift());
+      i < (groups.length - 1) ? i ++ : i = 0;
+    }
+
+    return groups;
   }
 
   static findOddMembers(arr) {

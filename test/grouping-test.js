@@ -47,11 +47,12 @@ describe('Grouping', done => {
       assert.equal(groups.length, 4);
     })
 
-    it('#assignOddMembersToGroups', () => {
-      const reassigned = Grouper.assignOddMembersToGroups(input);
+    it('#makeBiggerGroupsWithOddMembers', () => {
+      const grouped = Grouper.populateGroups(input);
+      const reassigned = Grouper.makeBiggerGroupsWithOddMembers(grouped);
 
       assert.isArray(reassigned);
-      assert.equal(reassigned.length, 7);
+      assert.equal(reassigned.length, 4);
       assert.equal(reassigned[0].length, 3);
       assert.include(reassigned[0], 9);
     });
