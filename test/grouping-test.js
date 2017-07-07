@@ -25,7 +25,7 @@ describe('Grouping', done => {
       assert.deepEqual(paired[4], [9]);
     });
 
-    xit('#populateGroups(input, 3)', () => {
+    it('#populateGroups(input, 3)', () => {
       const paired = Grouper.populateGroups(input, 3);
 
       assert.notEqual(paired, input);

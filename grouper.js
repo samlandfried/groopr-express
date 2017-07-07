@@ -21,7 +21,7 @@ class Grouper {
   static populateGroups(arr, size = 2) {
     return arr.reduce((memo, ele) => {
       let last = memo.length - 1;
-      if (!memo[last] || memo[last].length === 2) {
+      if (!memo[last] || memo[last].length === size) {
         memo.push(new Array());
         last++;
       }
