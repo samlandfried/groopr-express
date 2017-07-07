@@ -34,8 +34,9 @@ describe('Grouping', done => {
       assert.deepEqual(paired[2], [7, 8, 9]);
     });
 
-    xit('#findOddMembers', () => {
-      const split = Grouper.findOddMembers(input);
+    it('#findOddMembers', () => {
+      const grouped = Grouper.populateGroups(input);
+      const split = Grouper.findOddMembers(grouped);
       const groups = split.groups;
       const oddMembers = split.oddMembers;
 
@@ -46,7 +47,7 @@ describe('Grouping', done => {
       assert.equal(groups.length, 4);
     })
 
-    xit('#assignOddMembersToGroups', () => {
+    it('#assignOddMembersToGroups', () => {
       const reassigned = Grouper.assignOddMembersToGroups(input);
 
       assert.isArray(reassigned);

@@ -34,8 +34,22 @@ class Grouper {
     const groupsAndStragglers = this.findOddMembers(arr);
   }
 
-  static findOddMembers() {
+  static findOddMembers(arr) {
+    if (!arr[0])
+      throw new Error('You need groups!');
+    const groupSize = arr[0].length;
 
+    return arr.reduce((memo, group) => {
+      if (group.length === groupSize) {
+        memo.groups.push(group);
+      } else {
+        group.forEach(member => {
+          memo.oddMembers.push(member);
+        })
+      }
+
+      return memo;
+    }, {groups: [], oddMembers: []});
   }
 
   static randomize(arr) {
