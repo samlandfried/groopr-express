@@ -118,10 +118,10 @@ describe('Grouping', done => {
   });
 
   describe('Edge cases', () => {
-    const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     it("Won't make groups of size 1", () => {
-      const options = {size: 1};
+      const options = { size: 1 };
       const initSettings = {
         collection: input,
         options: options
@@ -131,13 +131,40 @@ describe('Grouping', done => {
     });
 
     it("Won't allow group sizes > collection size", () => {
-      const options = {size: 10};
+      const options = { size: 10 };
       const initSettings = {
         collection: input,
         options: options
       };
 
       expect(() => new Grouper(initSettings)).to.throw(RangeError);
+    });
+
+    it("Can group any datatype", () => {
+      const variedInput = [
+        null,
+        true,
+        { greeting: 'hi!' },
+        ['i', 'heard', 'you', 'like', 'arrays'],
+        function() {
+          throw new Error('This should never be thrown')
+        },
+        'Just a string, friend!',
+        22
+      ];
+
+      expect(() => {
+        const g = new Grouper({ collection: variedInput });
+        g.group();
+      }).to.not.throw();
+    });
+
+    it("Recommended grouping strategy without history", () => {
+      input = [1, 2, 0];
+      const options = {groupingStrategy: 'recommended'}
+      const grouper = new Grouper({collection: input, options: options})
+
+      expect(() => grouper.group()).to.not.throw();
     });
   });
 
@@ -291,7 +318,7 @@ describe('Grouping', done => {
           }
         }
 
-        expect(highestPairingCount).to.be.above(25)
+        expect(highestPairingCount).to.be.above(28)
       });
 
       it("Can group by 'recommended' strategy", () => {
@@ -326,7 +353,7 @@ describe('Grouping', done => {
           }
         }
 
-        expect(highestPairingCount).to.be.below(25)
+        expect(highestPairingCount).to.be.below(28)
       });
 
       xit("Can group by 'perfect' strategy", () => {
