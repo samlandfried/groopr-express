@@ -23,7 +23,7 @@ app.get('/', (request, response) => {
 
 app.namespace('/api', () => {
   app.namespace('/v1', () => {
-    app.get('/group', GroupsController.create );
+    app.post('/group', GroupsController.create );
   });
 });
 
