@@ -130,6 +130,16 @@ describe('Grouping', done => {
 
       expect(() => new Grouper(initSettings)).to.throw(RangeError);
     });
+
+    it("Won't allow group sizes > collection size", () => {
+      const options = {size: 10};
+      const initSettings = {
+        collection: input,
+        options: options
+      };
+
+      expect(() => new Grouper(initSettings)).to.throw(RangeError);
+    });
   });
 
   describe('Default behavior (No options hash provided)', () => {
