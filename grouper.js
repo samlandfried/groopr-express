@@ -18,6 +18,7 @@ class Grouper {
     const settings = Object.assign(defaults, options.options);
 
     this.collection = options.collection;
+    this.history = options.history || {};
     this.options = settings;
   }
 
@@ -25,7 +26,7 @@ class Grouper {
     const groups = this.makeGroups();
     const history = this.options.skipHistory ?
       'History recording and reporting was skipped with the skipHistory option.' :
-      Grouper.makeHistory(groups);
+      this.makeHistory(groups);
 
     return {
       groups: groups,
@@ -42,15 +43,16 @@ class Grouper {
     return oddMembersGrouped;
   }
 
-  static makeHistory(groups) {
+  makeHistory(groups) {
     return groups.reduce((history, group) => {
       group.forEach((outerMember, outerI) => {
-        history[outerMember] = new Object();
+        this.history[outerMember] ?
+          history[outerMember] = this.history[outerMember] :
+          history[outerMember] = new Object();
         group.forEach((innerMember, innerI) => {
           if (outerI !== innerI) {
-            if (!history[outerMember][innerMember])
-              history[outerMember][innerMember] = 0;
-            history[outerMember][innerMember]++;
+            history[outerMember][innerMember] = history[outerMember][innerMember] || 0;
+            history[outerMember][innerMember] ++;
           }
         });
       });
@@ -102,7 +104,7 @@ class Grouper {
 
     while (newGroup.length < groupSize && group < groups.length) {
       newGroup.push(groups[group].shift());
-      group ++;
+      group++;
     }
 
     groups.push(newGroup);

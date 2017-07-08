@@ -5,7 +5,7 @@ const Grouper = require('../grouper');
 const pry = require('pryjs')
 
 describe('Grouping', done => {
-  describe('Unit tests', () => {
+  xdescribe('Unit tests', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
 
@@ -105,7 +105,7 @@ describe('Grouping', done => {
     });
   });
 
-  describe('Initialization', () => {
+  xdescribe('Initialization', () => {
     it('Requires an options object', () => {
       const good = new Grouper({ collection: [] });
 
@@ -118,13 +118,12 @@ describe('Grouping', done => {
     });
   });
 
-  describe('Default behavior (No options hash provided)', () => {
+  xdescribe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
     const response = grouper.group();
     const groups = response.groups;
     const history = response.history;
-    console.log(history);
 
     it('Returns an object containing an array containing arrays', () => {
       assert.isObject(response);
@@ -159,7 +158,7 @@ describe('Grouping', done => {
     });
   });
 
-  describe('Options selected', () => {
+  xdescribe('Options selected', () => {
     it('Can vary group size', () => {
       const input = {
         options: { size: 4 },
@@ -224,7 +223,7 @@ describe('Grouping', done => {
     };
     const grouper = new Grouper(input);
 
-    it('Builds on the history file provided', () => {
+    it('Expands its history', () => {
       const modifiedHistory = grouper.group().history;
       let totalPairings = 0;
 
@@ -234,7 +233,6 @@ describe('Grouping', done => {
         }
       }
 
-      assert.notDeepEqual(modifiedHistory, originalHistory)
       assert.equal(totalPairings, 24)
     });
 
