@@ -1,7 +1,7 @@
 const assert = require('chai').assert;
 const expect = require('chai').expect;
 const request = require('request');
-const Grouper = require('../grouper');
+const Grouper = require('../lib/grouper');
 const pry = require('pryjs')
 
 describe('Grouping', done => {

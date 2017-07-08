@@ -2,7 +2,7 @@ const assert = require('chai').assert;
 const request = require('request');
 const app = require('../server');
 
-describe('GET /api/v1/group', done => {
+describe('POST /api/v1/group', done => {
   before(done => {
     this.port = 9876;
     this.server = app.listen(this.port, (error, result) => {
@@ -10,7 +10,7 @@ describe('GET /api/v1/group', done => {
       done();
     });
     this.request = request.defaults({
-      baseUrl: 'http://localhost:9876/'
+      baseUrl: 'http://localhost:9876/api/v1'
     })
   });
 
@@ -24,14 +24,12 @@ describe('GET /api/v1/group', done => {
       collection: collection
     },
     json: true,
-    url: '/api/v1/group'
+    url: '/group'
   };
-
-  let response;
 
   describe('Basic functionality', () => {
     it('Accepts an options hash containing the collection to be grouped', done => {
-      this.request.get(options, (error, response, body) => {
+      this.request.post(options, (error, response, body) => {
         if (error) { done(error); }
         assert.ok(response);
         done();
@@ -39,7 +37,7 @@ describe('GET /api/v1/group', done => {
     });
 
     it('Responds with status 200', done => {
-      this.request.get(options, (error, response, body) => {
+      this.request.post(options, (error, response, body) => {
         if (error) { done(error); }
         assert.equal(response.statusCode, 200);
         done();
@@ -47,7 +45,7 @@ describe('GET /api/v1/group', done => {
     });
 
     it('Responds with groups and history', done => {
-      this.request.get(options, (error, response, body) => {
+      this.request.post(options, (error, response, body) => {
         if (error) { done(error); }
         assert.isObject(body);
         assert.isObject(body.history);
@@ -57,9 +55,9 @@ describe('GET /api/v1/group', done => {
     });
 
     it('Includes all of the original elements', done => {
-      this.request.get(options, (error, response, body) => {
+      this.request.post(options, (error, response, body) => {
         if (error) { done(error); }
-        const eles = [].concat.apply([], body.groups);
+        const eles = [].concat.apply([], body.groups).sort();
         assert.deepEqual(collection, eles);
         done();
       });

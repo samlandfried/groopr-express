@@ -1,7 +1,11 @@
 const express = require('express');
-const app = express();
-
+const namespace = require('express-namespace');
 const bodyParser = require('body-parser');
+const Grouper = require('./lib/grouper')
+const groupsController = require('./lib/controllers/GroupsController');
+const GroupsController = new groupsController();
+
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,11 +21,10 @@ app.get('/', (request, response) => {
   response.send('Hello, world!');
 });
 
-app.get('/groop', (request, response) => {
-  body = {
-    groups: [0,1,2,3,4,5,6,7,8,9]
-  }
-  response.json(body);
+app.namespace('/api', () => {
+  app.namespace('/v1', () => {
+    app.get('/group', GroupsController.create );
+  });
 });
 
 module.exports = app;
