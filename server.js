@@ -2,7 +2,7 @@ const express = require('express');
 const namespace = require('express-namespace');
 const bodyParser = require('body-parser');
 const Grouper = require('./lib/grouper')
-const groupsController = require('./lib/controllers/GroupsController');
+const groupsController = require('./lib/controllers/groupsController');
 const GroupsController = new groupsController();
 
 const app = express();
