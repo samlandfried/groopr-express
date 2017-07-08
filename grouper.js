@@ -37,7 +37,7 @@ class Grouper {
   makeGroups() {
     const settings = this.options;
     const shuffled = Grouper.randomize(this.collection);
-    const grouped = Grouper.populateGroups(shuffled, settings.size);
+    const grouped = this.populateGroups(shuffled, settings.size);
     const oddMembersGrouped = Grouper.mixInOddMembers(grouped, settings.oddMemberStrategy);
 
     return oddMembersGrouped;
@@ -52,7 +52,7 @@ class Grouper {
         group.forEach((innerMember, innerI) => {
           if (outerI !== innerI) {
             history[outerMember][innerMember] = history[outerMember][innerMember] || 0;
-            history[outerMember][innerMember] ++;
+            history[outerMember][innerMember]++;
           }
         });
       });
@@ -61,16 +61,11 @@ class Grouper {
   }
 
 
-  static populateGroups(arr, size = 2) {
-    return arr.reduce((memo, ele) => {
-      let last = memo.length - 1;
-      if (!memo[last] || memo[last].length === size) {
-        memo.push(new Array());
-        last++;
-      }
-      memo[last].push(ele);
-      return memo;
-    }, []);
+  populateGroups(arr, size = 2) {
+    if (this.options.groupingStrategy === 'random')
+      return makeRandomGroups(arr, size);
+    if (this.options.groupingStrategy === 'recommended')
+      return makeRecommendedGroups(arr, size, this.history);
   }
 
   static mixInOddMembers(groups, strategy) {
@@ -134,5 +129,70 @@ class Grouper {
     return arr.slice().sort(() => .5 - Math.random());
   }
 }
+
+const makeRandomGroups = (arr, size) => {
+  return arr.reduce((memo, ele) => {
+    let last = memo.length - 1;
+    if (!memo[last] || memo[last].length === size) {
+      memo.push(new Array());
+      last++;
+    }
+    memo[last].push(ele);
+    return memo;
+  }, new Array());
+};
+
+const makeRecommendedGroups = (arr, size, hist) => {
+  const ungrouped = arr.slice();
+  const groups = [];
+
+  while (ungrouped.length > 0) {
+    let currentEle = ungrouped.shift();
+    let group = [currentEle];
+
+    while (group.length < size && ungrouped.length > 0) {
+      const fittest = ungrouped.pluckFittest(group, hist);
+      group.push(fittest);
+    }
+    groups.push(group);
+  }
+  return groups;
+};
+
+Array.prototype.pluckFittest = function (group, hist) {
+  let score;
+  let fittestI;
+
+  const fittest = this.reduce((fittest, ele, index) => {
+    const eleScore = hist.getFitnessScore(group.concat(ele));
+
+    if (!score || eleScore < score) {
+      score = eleScore;
+      fittestI = index;
+      return ele;
+    } else {
+      return fittest;
+    }
+  });
+
+  this.splice(fittestI, 1);
+  return fittest;
+};
+
+Object.prototype.getFitnessScore = function (group) {
+  return group.reduce((score, member, memberIndex) => {
+    group.forEach((partner, partnerIndex) => {
+      if (partnerIndex !== memberIndex) {
+        const groupedInPastCount = this[member][partner] || 0;
+        score += (groupedInPastCount + 1) ** 2;
+      }
+    })
+    return score;
+  }, 0);
+};
+
+Object.defineProperty(Object.prototype, 'getFitnessScore', {
+  enumerable: false
+});
 
 module.exports = Grouper;

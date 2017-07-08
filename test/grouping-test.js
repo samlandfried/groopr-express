@@ -206,24 +206,24 @@ describe('Grouping', done => {
   });
 
   describe('History', () => {
-    const originalHistory = {
-      '1': { '4': 1 },
-      '2': { '5': 1, '8': 1 },
-      '3': { '7': 1 },
-      '4': { '1': 1 },
-      '5': { '2': 1, '8': 1 },
-      '6': { '9': 1 },
-      '7': { '3': 1 },
-      '8': { '2': 1, '5': 1 },
-      '9': { '6': 1 }
-    };
-    const input = {
-      collection: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      history: originalHistory
-    };
-    const grouper = new Grouper(input);
+    xit('Expands its history', () => {
+      const originalHistory = {
+        '1': { '4': 1 },
+        '2': { '5': 1, '8': 1 },
+        '3': { '7': 1 },
+        '4': { '1': 1 },
+        '5': { '2': 1, '8': 1 },
+        '6': { '9': 1 },
+        '7': { '3': 1 },
+        '8': { '2': 1, '5': 1 },
+        '9': { '6': 1 }
+      };
+      const input = {
+        collection: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        history: originalHistory
+      };
 
-    it('Expands its history', () => {
+      const grouper = new Grouper(input);
       const modifiedHistory = grouper.group().history;
       let totalPairings = 0;
 
@@ -237,9 +237,24 @@ describe('Grouping', done => {
     });
 
     describe('Strategies', () => {
-      it('Can be grouped randomly', () => {
-        grouper.options.groupingStrategy = 'random';
+      it('Groups randomly by default', () => {
+        const originalHistory = {
+          '1': { '4': 1 },
+          '2': { '5': 1, '8': 1 },
+          '3': { '7': 1 },
+          '4': { '1': 1 },
+          '5': { '2': 1, '8': 1 },
+          '6': { '9': 1 },
+          '7': { '3': 1 },
+          '8': { '2': 1, '5': 1 },
+          '9': { '6': 1 }
+        };
+        const input = {
+          collection: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          history: originalHistory
+        };
 
+        const grouper = new Grouper(input);
         let highestPairingCount = 1;
         let newHist = 1;
         for (let i = 0; i < 100; i++) {
@@ -248,14 +263,47 @@ describe('Grouping', done => {
           for (member in newHist) {
             for (partner in newHist[member]) {
               if (newHist[member][partner] > highestPairingCount)
-                highestPairingCount = newHist[member][partner]
+                highestPairingCount = newHist[member][partner];
             }
           }
-
-          grouper.history = newHist;
         }
 
-        expect(highestPairingCount).to.be.above(20)
+        expect(highestPairingCount).to.be.above(25)
+      });
+
+      it("Can group by 'recommended' strategy", () => {
+        const originalHistory = {
+          '1': { '4': 1 },
+          '2': { '5': 1, '8': 1 },
+          '3': { '7': 1 },
+          '4': { '1': 1 },
+          '5': { '2': 1, '8': 1 },
+          '6': { '9': 1 },
+          '7': { '3': 1 },
+          '8': { '2': 1, '5': 1 },
+          '9': { '6': 1 }
+        };
+        const input = {
+          collection: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          history: originalHistory
+        };
+
+        input.options = { groupingStrategy: 'recommended' };
+        const grouper = new Grouper(input);
+        let highestPairingCount = 1;
+        let newHist = 1;
+        for (let i = 0; i < 100; i++) {
+          newHist = grouper.group().history;
+
+          for (member in newHist) {
+            for (partner in newHist[member]) {
+              if (newHist[member][partner] > highestPairingCount)
+                highestPairingCount = newHist[member][partner];
+            }
+          }
+        }
+
+        expect(highestPairingCount).to.be.below(25)
       });
     });
   });
