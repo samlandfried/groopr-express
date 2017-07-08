@@ -118,6 +118,20 @@ describe('Grouping', done => {
     });
   });
 
+  describe('Edge cases', () => {
+    const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    it("Won't make groups of size 1", () => {
+      const options = {size: 1};
+      const initSettings = {
+        collection: input,
+        options: options
+      };
+
+      expect(() => new Grouper(initSettings)).to.throw(RangeError);
+    });
+  });
+
   describe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });

@@ -17,6 +17,10 @@ class Grouper {
 
     const settings = Object.assign(defaults, options.options);
 
+    if (settings.size < 2) {
+      throw new RangeError('Group size must be more than 1');
+    }
+
     this.collection = options.collection;
     this.history = options.history || {};
     this.options = settings;
@@ -169,7 +173,7 @@ const makePerfectGroups = (arr, size, hist) => {
   // Find arrangement with lowest overall fitness score
 };
 
-Array.prototype.pluckFittest = function (group, hist) {
+Array.prototype.pluckFittest = function(group, hist) {
   let score;
   let fittestI;
 
@@ -189,7 +193,7 @@ Array.prototype.pluckFittest = function (group, hist) {
   return fittest;
 };
 
-Object.prototype.getFitnessScore = function (group) {
+Object.prototype.getFitnessScore = function(group) {
   return group.reduce((score, member, memberIndex) => {
     group.forEach((partner, partnerIndex) => {
       if (partnerIndex !== memberIndex) {
