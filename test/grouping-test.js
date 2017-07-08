@@ -107,7 +107,7 @@ describe('Grouping', done => {
 
   describe('Initialization', () => {
     it('Requires an options object', () => {
-      const good = new Grouper({ collection: [] });
+      const good = new Grouper({ collection: [1, 2, 3] });
 
       assert.ok(good);
       expect(function() { new Grouper() }).to.throw('Options object containing a collection required');

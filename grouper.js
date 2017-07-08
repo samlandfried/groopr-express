@@ -17,9 +17,10 @@ class Grouper {
 
     const settings = Object.assign(defaults, options.options);
 
-    if (settings.size < 2) {
+    if (settings.size < 2)
       throw new RangeError('Group size must be more than 1');
-    }
+    if (settings.size > options.collection.length)
+      throw new RangeError('Group size must be less than collection size');
 
     this.collection = options.collection;
     this.history = options.history || {};
