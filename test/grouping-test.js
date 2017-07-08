@@ -124,6 +124,7 @@ describe('Grouping', done => {
     const response = grouper.group();
     const groups = response.groups;
     const history = response.history;
+    console.log(history);
 
     it('Returns an object containing an array containing arrays', () => {
       assert.isObject(response);
@@ -194,14 +195,70 @@ describe('Grouping', done => {
 
     it('Can skip making history', () => {
       const input = {
-        collection: [1,2,3],
-        options: {skipHistory: true}
+        collection: [1, 2, 3],
+        options: { skipHistory: true }
       };
 
       const grouper = new Grouper(input);
       const hist = grouper.group().history;
 
       assert.equal(hist, 'History recording and reporting was skipped with the skipHistory option.');
+    });
+  });
+
+  describe('History', () => {
+    const originalHistory = {
+      '1': { '4': 1 },
+      '2': { '5': 1, '8': 1 },
+      '3': { '7': 1 },
+      '4': { '1': 1 },
+      '5': { '2': 1, '8': 1 },
+      '6': { '9': 1 },
+      '7': { '3': 1 },
+      '8': { '2': 1, '5': 1 },
+      '9': { '6': 1 }
+    };
+    const input = {
+      collection: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      history: originalHistory
+    };
+    const grouper = new Grouper(input);
+
+    it('Builds on the history file provided', () => {
+      const modifiedHistory = grouper.group().history;
+      let totalPairings = 0;
+
+      for (member in modifiedHistory) {
+        for (partner in modifiedHistory[member]) {
+          totalPairings += modifiedHistory[member][partner];
+        }
+      }
+
+      assert.notDeepEqual(modifiedHistory, originalHistory)
+      assert.equal(totalPairings, 24)
+    });
+
+    describe('Strategies', () => {
+      it('Can be grouped randomly', () => {
+        grouper.options.groupingStrategy = 'random';
+
+        let highestPairingCount = 1;
+        let newHist = 1;
+        for (let i = 0; i < 100; i++) {
+          newHist = grouper.group().history;
+
+          for (member in newHist) {
+            for (partner in newHist[member]) {
+              if (newHist[member][partner] > highestPairingCount)
+                highestPairingCount = newHist[member][partner]
+            }
+          }
+
+          grouper.history = newHist;
+        }
+
+        expect(highestPairingCount).to.be.above(20)
+      });
     });
   });
 });
