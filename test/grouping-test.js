@@ -5,7 +5,7 @@ const Grouper = require('../grouper');
 const pry = require('pryjs')
 
 describe('Grouping', done => {
-  xdescribe('Unit tests', () => {
+  describe('Unit tests', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
 
@@ -18,7 +18,7 @@ describe('Grouping', done => {
     });
 
     it('#populateGroups(defaults to 2)', () => {
-      const paired = Grouper.populateGroups(input);
+      const paired = grouper.populateGroups(input);
 
       assert.notEqual(paired, input);
       assert.equal(paired.length, 5);
@@ -27,7 +27,7 @@ describe('Grouping', done => {
     });
 
     it('#populateGroups(input, 3)', () => {
-      const paired = Grouper.populateGroups(input, 3);
+      const paired = grouper.populateGroups(input, 3);
 
       assert.notEqual(paired, input);
       assert.equal(paired.length, 3);
@@ -36,7 +36,7 @@ describe('Grouping', done => {
     });
 
     it('#findOddMembers', () => {
-      const grouped = Grouper.populateGroups(input);
+      const grouped = grouper.populateGroups(input);
       const split = Grouper.findOddMembers(grouped);
       const groups = split.groups;
       const oddMembers = split.oddMembers;
@@ -49,7 +49,7 @@ describe('Grouping', done => {
     })
 
     it('#makeBiggerGroupsWithOddMembers', () => {
-      const grouped = Grouper.populateGroups(input);
+      const grouped = grouper.populateGroups(input);
       const regrouped = Grouper.findOddMembers(grouped);
       const reassigned = Grouper.makeBiggerGroupsWithOddMembers(regrouped);
 
@@ -75,7 +75,7 @@ describe('Grouping', done => {
       const member2 = groups[0][1];
       const member3 = groups[0][2];
 
-      const hist = Grouper.makeHistory(groups);
+      const hist = grouper.makeHistory(groups);
       const hist1 = hist[member1];
       const hist2 = hist[member2];
       const hist3 = hist[member3];
@@ -105,7 +105,7 @@ describe('Grouping', done => {
     });
   });
 
-  xdescribe('Initialization', () => {
+  describe('Initialization', () => {
     it('Requires an options object', () => {
       const good = new Grouper({ collection: [] });
 
@@ -118,7 +118,7 @@ describe('Grouping', done => {
     });
   });
 
-  xdescribe('Default behavior (No options hash provided)', () => {
+  describe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
     const response = grouper.group();
@@ -158,7 +158,7 @@ describe('Grouping', done => {
     });
   });
 
-  xdescribe('Options selected', () => {
+  describe('Options selected', () => {
     it('Can vary group size', () => {
       const input = {
         options: { size: 4 },
@@ -206,7 +206,7 @@ describe('Grouping', done => {
   });
 
   describe('History', () => {
-    xit('Expands its history', () => {
+    it('Expands its history', () => {
       const originalHistory = {
         '1': { '4': 1 },
         '2': { '5': 1, '8': 1 },
