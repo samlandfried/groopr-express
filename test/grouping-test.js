@@ -5,7 +5,7 @@ const Grouper = require('../grouper');
 const pry = require('pryjs')
 
 describe('Grouping', done => {
-  describe('Unit tests', () => {
+  xdescribe('Unit tests', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
 
@@ -103,7 +103,7 @@ describe('Grouping', done => {
     });
   });
 
-  describe('Initialization', () => {
+  xdescribe('Initialization', () => {
     it('Requires an options object', () => {
       const good = new Grouper({ collection: [] });
 
@@ -116,7 +116,7 @@ describe('Grouping', done => {
     });
   });
 
-  describe('Default behavior (No options hash provided)', () => {
+  xdescribe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
     const response = grouper.group();
@@ -153,6 +153,23 @@ describe('Grouping', done => {
       const groups2 = grouper.group();
 
       assert.notDeepEqual(groups, groups2); // This test will fail 1 / 9! times
+    });
+  });
+
+  describe('Options selected', () => {
+    // size
+    // groupingStrategy
+    // oddMemberStrategy
+    // skipHist
+    const input = {collection: [1,2,3,4,5,6,7,8,9]};
+    it('Can vary group size', () => {
+      input.options = {size: 4};
+      const grouper = new Grouper(input);
+      const groups = grouper.group().groups;
+
+      assert.equal(groups.length, 2)
+      assert.equal(groups[0].length, 5)
+      assert.equal(groups[1].length, 4)
     });
   });
 });
