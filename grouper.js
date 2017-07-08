@@ -6,28 +6,35 @@ class Grouper {
       throw new Error('Array to be grouped must be present on collection property of options object. Something like this: {collection: []}');
     }
 
+    const defaults = {
+      skipHistory: false,
+      size: 2,
+      oddMemberStrategy: 'large',
+      groupingStrategy: 'random'
+    }
+
+    let settings = Object.assign(defaults, options.options);
+
     this.collection = options.collection;
-    this.options = options.options;
+    this.options = settings;
   }
 
   group() {
     const groups = this.makeGroups();
+    const history = this.options.skipHistory ?
+      'History recording and reporting was skipped with the skipHistory option.' :
+      Grouper.makeHistory(groups);
+
     return {
       groups: groups,
-      history: Grouper.makeHistory(groups)
+      history: history
     };
   }
 
   makeGroups() {
-    let size;
-    if (this.options) {
-      size = this.options.size;
-    }
-
+    const settings = this.options;
     const shuffled = Grouper.randomize(this.collection);
-    const grouped = size ?
-      Grouper.populateGroups(shuffled, size) :
-      Grouper.populateGroups(shuffled);
+    const grouped = Grouper.populateGroups(shuffled, settings.size);
     const oddMemberGrouped = Grouper.makeBiggerGroupsWithOddMembers(grouped);
 
     return oddMemberGrouped;

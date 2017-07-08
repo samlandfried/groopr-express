@@ -5,7 +5,7 @@ const Grouper = require('../grouper');
 const pry = require('pryjs')
 
 describe('Grouping', done => {
-  xdescribe('Unit tests', () => {
+  describe('Unit tests', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
 
@@ -103,7 +103,7 @@ describe('Grouping', done => {
     });
   });
 
-  xdescribe('Initialization', () => {
+  describe('Initialization', () => {
     it('Requires an options object', () => {
       const good = new Grouper({ collection: [] });
 
@@ -116,7 +116,7 @@ describe('Grouping', done => {
     });
   });
 
-  xdescribe('Default behavior (No options hash provided)', () => {
+  describe('Default behavior (No options hash provided)', () => {
     const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const grouper = new Grouper({ collection: input });
     const response = grouper.group();
@@ -157,10 +157,6 @@ describe('Grouping', done => {
   });
 
   describe('Options selected', () => {
-    // size
-    // groupingStrategy
-    // oddMemberStrategy
-    // skipHist
     it('Can vary group size', () => {
       const input = {
         options: { size: 4 },
@@ -196,13 +192,13 @@ describe('Grouping', done => {
     it('Can skip making history', () => {
       const input = {
         collection: [1,2,3],
-        options: {skipHist: true}
+        options: {skipHistory: true}
       };
 
       const grouper = new Grouper(input);
       const hist = grouper.group().history;
 
-      assert.equal(hist, 'History recording and reporting was skipped with the skipHist option.');
+      assert.equal(hist, 'History recording and reporting was skipped with the skipHistory option.');
     });
   });
 });
