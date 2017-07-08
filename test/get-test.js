@@ -2,7 +2,7 @@ const assert = require('chai').assert;
 const request = require('request');
 const app = require('../server');
 
-describe('GET /groop', done => {
+describe('GET /api/v1/group', done => {
   before(done => {
     this.port = 9876;
     this.server = app.listen(this.port, (error, result) => {
@@ -24,42 +24,45 @@ describe('GET /groop', done => {
       collection: collection
     },
     json: true,
-    url: '/groop'
+    url: '/api/v1/group'
   };
 
-  let response = null;
+  let response;
 
-  it('Accepts an options hash containing the collection to be grouped', done => {
-    this.request.get(options, (error, response, body) => {
-      if (error) { done(error); }
-      assert.ok(response);
-      done();
+  describe('Basic functionality', () => {
+    it('Accepts an options hash containing the collection to be grouped', done => {
+      this.request.get(options, (error, response, body) => {
+        if (error) { done(error); }
+        assert.ok(response);
+        done();
+      });
     });
-  });
 
-  it('Responds with status 200', done => {
-    this.request.get(options, (error, response, body) => {
-      if (error) { done(error); }
-      assert.equal(response.statusCode, 200);
-      done();
+    it('Responds with status 200', done => {
+      this.request.get(options, (error, response, body) => {
+        if (error) { done(error); }
+        assert.equal(response.statusCode, 200);
+        done();
+      });
     });
-  });
 
-  it('Responds with an object containing an array of groups', done => {
-    this.request.get(options, (error, response, body) => {
-      if (error) { done(error); }
-      assert.isObject(response.body);
-      assert.isArray(body.groups);
-      done();
+    it('Responds with groups and history', done => {
+      this.request.get(options, (error, response, body) => {
+        if (error) { done(error); }
+        assert.isObject(body);
+        assert.isObject(body.history);
+        assert.isArray(body.groups);
+        done();
+      });
     });
-  });
 
-  it('Includes all of the original elements', done => {
-    this.request.get(options, (error, response, body) => {
-      if (error) { done(error); }
-      const eles = [].concat.apply([], body.groups);
-      assert.deepEqual(collection, eles);
-      done();
+    it('Includes all of the original elements', done => {
+      this.request.get(options, (error, response, body) => {
+        if (error) { done(error); }
+        const eles = [].concat.apply([], body.groups);
+        assert.deepEqual(collection, eles);
+        done();
+      });
     });
-  });
+  })
 });
