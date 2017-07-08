@@ -24,7 +24,7 @@ describe('POST /api/v1/group', done => {
       collection: collection
     },
     json: true,
-    url: '/group'
+    url: '/groups'
   };
 
   describe('Basic functionality', () => {
