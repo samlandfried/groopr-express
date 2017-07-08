@@ -66,6 +66,8 @@ class Grouper {
       return makeRandomGroups(arr, size);
     if (this.options.groupingStrategy === 'recommended')
       return makeRecommendedGroups(arr, size, this.history);
+    if (this.options.groupingStrategy === 'perfect')
+      return makePerfectGroups(arr, size, this.history);
   }
 
   static mixInOddMembers(groups, strategy) {
@@ -157,6 +159,14 @@ const makeRecommendedGroups = (arr, size, hist) => {
     groups.push(group);
   }
   return groups;
+};
+
+const makePerfectGroups = (arr, size, hist) => {
+  // Consider every possible arrangement
+  throw new Error('I should probably make this');
+
+
+  // Find arrangement with lowest overall fitness score
 };
 
 Array.prototype.pluckFittest = function (group, hist) {
