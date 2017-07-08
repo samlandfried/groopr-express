@@ -7,6 +7,7 @@ class Grouper {
     }
 
     this.collection = options.collection;
+    this.options = options.options;
   }
 
   group() {
@@ -18,9 +19,16 @@ class Grouper {
   }
 
   makeGroups() {
+    let size;
+    if (this.options) {
+      size = this.options.size;
+    }
+
     const shuffled = Grouper.randomize(this.collection);
-    const paired = Grouper.populateGroups(shuffled);
-    const oddMemberGrouped = Grouper.makeBiggerGroupsWithOddMembers(paired);
+    const grouped = size ?
+      Grouper.populateGroups(shuffled, size) :
+      Grouper.populateGroups(shuffled);
+    const oddMemberGrouped = Grouper.makeBiggerGroupsWithOddMembers(grouped);
 
     return oddMemberGrouped;
   }

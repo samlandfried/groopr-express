@@ -162,6 +162,7 @@ describe('Grouping', done => {
     // oddMemberStrategy
     // skipHist
     const input = {collection: [1,2,3,4,5,6,7,8,9]};
+
     it('Can vary group size', () => {
       input.options = {size: 4};
       const grouper = new Grouper(input);
