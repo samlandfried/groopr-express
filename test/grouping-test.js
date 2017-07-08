@@ -50,7 +50,8 @@ describe('Grouping', done => {
 
     it('#makeBiggerGroupsWithOddMembers', () => {
       const grouped = Grouper.populateGroups(input);
-      const reassigned = Grouper.makeBiggerGroupsWithOddMembers(grouped);
+      const regrouped = Grouper.findOddMembers(grouped);
+      const reassigned = Grouper.makeBiggerGroupsWithOddMembers(regrouped);
 
       assert.isArray(reassigned);
       assert.equal(reassigned.length, 4);
@@ -81,14 +82,15 @@ describe('Grouping', done => {
 
       assert.isObject(hist);
 
-      assert.isUndefined(hist1[member1]);
       assert.equal(hist1[member2], 1);
       assert.equal(hist1[member3], 1);
       assert.equal(hist2[member1], 1);
-      assert.isUndefined(hist2[member2]);
       assert.equal(hist2[member3], 1);
       assert.equal(hist3[member1], 1);
       assert.equal(hist3[member2], 1);
+
+      assert.isUndefined(hist1[member1]);
+      assert.isUndefined(hist2[member2]);
       assert.isUndefined(hist3[member3]);
     });
 
@@ -182,11 +184,12 @@ describe('Grouping', done => {
       const grouper = new Grouper(input);
       const groups = grouper.group().groups;
 
+
       assert.equal(groups.length, 4);
-      assert.equal(groups[0].length, 4);
+      assert.equal(groups[0].length, 3);
       assert.equal(groups[1].length, 3);
       assert.equal(groups[2].length, 3);
-      assert.equal(groups[3].length, 3);
+      assert.equal(groups[3].length, 4);
     });
 
     it('Can skip making history', () => {

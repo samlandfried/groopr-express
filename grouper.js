@@ -1,3 +1,5 @@
+const pry = require('pryjs')
+
 class Grouper {
   constructor(options) {
     if (typeof options !== 'object') {
@@ -13,7 +15,7 @@ class Grouper {
       groupingStrategy: 'random'
     }
 
-    let settings = Object.assign(defaults, options.options);
+    const settings = Object.assign(defaults, options.options);
 
     this.collection = options.collection;
     this.options = settings;
@@ -35,9 +37,9 @@ class Grouper {
     const settings = this.options;
     const shuffled = Grouper.randomize(this.collection);
     const grouped = Grouper.populateGroups(shuffled, settings.size);
-    const oddMemberGrouped = Grouper.makeBiggerGroupsWithOddMembers(grouped);
+    const oddMembersGrouped = Grouper.mixInOddMembers(grouped, settings.oddMemberStrategy);
 
-    return oddMemberGrouped;
+    return oddMembersGrouped;
   }
 
   static makeHistory(groups) {
@@ -69,10 +71,16 @@ class Grouper {
     }, []);
   }
 
-  static makeBiggerGroupsWithOddMembers(arr) {
-    const groupsAndStragglers = this.findOddMembers(arr);
-    const oddMembers = groupsAndStragglers.oddMembers;
-    const groups = groupsAndStragglers.groups;
+  static mixInOddMembers(groups, strategy) {
+    const groupsAndStragglers = Grouper.findOddMembers(groups);
+    return strategy === 'small' ?
+      Grouper.makeSmallerGroupsWithOddMembers(groupsAndStragglers) :
+      Grouper.makeBiggerGroupsWithOddMembers(groupsAndStragglers);
+  }
+
+  static makeBiggerGroupsWithOddMembers(splitMembers) {
+    const oddMembers = splitMembers.oddMembers;
+    const groups = splitMembers.groups;
 
     let i = 0;
 
@@ -80,6 +88,24 @@ class Grouper {
       groups[i].push(oddMembers.shift());
       i < (groups.length - 1) ? i++ : i = 0;
     }
+
+    return groups;
+  }
+
+  static makeSmallerGroupsWithOddMembers(splitMembers) {
+    const groups = splitMembers.groups;
+    const groupSize = groups[0].length;
+    const oddMembers = splitMembers.oddMembers;
+    const newGroup = [].concat(oddMembers);
+
+    let group = 0;
+
+    while (newGroup.length < groupSize && group < groups.length) {
+      newGroup.push(groups[group].shift());
+      group ++;
+    }
+
+    groups.push(newGroup);
 
     return groups;
   }
@@ -108,7 +134,3 @@ class Grouper {
 }
 
 module.exports = Grouper;
-
-Array.prototype.randomize = function(arr) {
-  return arr.sort((a, b) => 0.5 - Math.random());
-}
