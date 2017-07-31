@@ -8,6 +8,7 @@ const GroupsController = new groupsController();
 
 const app = express();
 
+app.use(cors({origin: '*'}))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
